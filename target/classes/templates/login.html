@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>ATM Facility</title>
+<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="css/modify.css" rel="stylesheet" type="text/css" />
+<script src="js/bootstrap.min.js"></script>
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="js/jquery.cookie.js"></script>
+	
+<script>
+if($.cookie("accNum"))
+	$(location).attr('href',"/signin-success");
+	$(document).ready(function(){
+		
+		$('#submit').click(function(event){
+			event.preventDefault();
+			var aNum = $('#inputAccNum').val();
+			var pNum = $('#inputPin').val();
+			
+			var accdata = aNum + ";" + pNum;
+			 
+			$.ajax({
+				url : "/signin",
+				type: "POST",
+				contentType: 'application/json',
+				data: JSON.stringify({ acc : aNum, pin : pNum })
+			}).done(function(data){
+				
+				if(data == "OK"){
+					$.cookie("accNum", aNum);
+					$(location).attr('href',"/signin-success");
+				}
+			});
+			
+		});
+	});
+	
+</script>	
+
+</head>
+<body>
+	<div class="container">
+		<h1>Login</h1>
+		<div class="form">
+			<form class="form-horizontal" id="login-form" action="#" method="post">
+				
+				<div class="form-group">
+					<label for="acc" class="col-sm-2 control-label">Account
+						Number</label>
+					<div class="col-sm-10">
+						<input type="text" name="accNum" class="form-control"
+							id="inputAccNum" placeholder="Account Number"></input>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="pin" class="col-sm-2 control-label">Pin
+						Number</label>
+					<div class="col-sm-10">
+						<input type="password" name="pinNum" class="form-control"
+							id="inputPin" placeholder="Pin Number"></input>
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-10">
+						<button type="submit" id="submit" class="btn btn-primary">Login</button>
+					</div>
+				</div>
+			</form>
+		</div>
+
+	</div>
+
+</body>
+</html>

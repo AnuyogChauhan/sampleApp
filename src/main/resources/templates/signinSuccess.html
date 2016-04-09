@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Success</title>
+<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="css/modify.css" rel="stylesheet" type="text/css" />
+<script src="js/bootstrap.min.js"></script>
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="js/jquery.cookie.js"></script>
+<script>
+	if (!($.cookie("accNum")))
+		$(location).attr('href', "/login");
+	$(document).ready(function() {
+		$("#withdraw").hide();
+		$("#deposit").hide();
+		$("#message-withdraw").hide();
+		$("#message-deposit").hide();
+		
+		$("#withdrawButton").click(function() {
+			$("#deposit").hide();
+			$("#withdraw").addClass("active");
+			$("#withdraw").show();
+		});
+		$("#depositButton").click(function() {
+			$("#withdraw").hide();
+			$("#deposit").addClass("active");
+			$("#deposit").show();
+		});
+		$("#submit-withdraw").click(function(event){
+			event.preventDefault();
+			$("#message-withdraw").hide();
+			var amt = $("#amount-withdraw").val();
+			var acc = $.cookie("accNum");
+			
+			$.ajax({
+				url : "/withdraw",
+				type: "POST",
+				contentType: 'application/json',
+				data: JSON.stringify({ account : acc, amount : amt })
+			}).done(function(data){
+				if(data == "OK")
+					$("#message-withdraw").removeClass("alert alert-danger").addClass("alert alert-success").show().html("Success !!");
+				else
+					$("#message-withdraw").removeClass("alert alert-success").addClass("alert alert-danger").show().html("Failure !!");
+			});  
+		});
+		$("#submit-deposit").click(function(event){
+			event.preventDefault();
+			$("#message-deposit").hide();
+			var amt = $("#amount-deposit").val();
+			var acc = $.cookie("accNum");
+			
+			$.ajax({
+				url : "/deposit",
+				type: "POST",
+				contentType: 'application/json',
+				data: JSON.stringify({ account : acc, amount : amt })
+			}).done(function(data){
+				if(data == "OK")
+					$("#message-deposit").removeClass("alert alert-danger").addClass("alert alert-success").show().html("Success !!");
+				else
+					$("#message-deposit").removeClass("alert alert-success").addClass("alert alert-danger").show().html("Failure !!");
+			});  
+		});
+	});
+</script>
+</head>
+<body>
+	<div class="container">
+
+		<h1>Success !!</h1>
+
+		<ul class="nav nav-tabs" id="myTab">
+			<li role="presentation"><a id="withdrawButton" href="#">Withdraw</a></li>
+			<li role="presentation"><a id="depositButton" href="#">Deposit</a></li>
+			<li role="presentation"><a href="/logout">Logout</a></li>
+		</ul>
+		<div class="_tab-content">
+			<div id="withdraw" class="tab-pane">
+				<div class="container">
+					<h3>Withdraw</h3>
+					<div class="form">
+						<form class="form-horizontal" id="login-form-withdraw" action="#"
+							method="post">
+
+							<div class="form-group">
+								<label for="amount-withdraw" class="col-sm-2 control-label">Withdraw
+									Amount</label>
+								<div class="col-sm-10">
+									<input type="text" name="amount-withdraw" class="form-control"
+										id="amount-withdraw" placeholder="Enter amount to be withdrawn"></input>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<div class="col-sm-offset-2 col-sm-10">
+									<button type="submit" id="submit-withdraw" class="btn btn-primary">Submit</button>
+								</div>
+							</div>
+						</form>
+					</div>
+					
+					<div class="alert alert-success" id="message-withdraw" role="alert"></div>
+
+				</div>
+
+			</div>
+			<div id="deposit" class="tab-pane">
+				<div class="container">
+					<h3>Deposit</h3>
+					<div class="form">
+						<form class="form-horizontal" id="login-form-deposit" action="#"
+							method="post">
+
+							<div class="form-group">
+								<label for="amount-deposit" class="col-sm-2 control-label">Deposit
+									Amount</label>
+								<div class="col-sm-10">
+									<input type="text" name="amount-deposit" class="form-control"
+										id="amount-deposit" placeholder="Enter amount to be deposit"></input>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<div class="col-sm-offset-2 col-sm-10">
+									<button type="submit" id="submit-deposit" class="btn btn-primary">Submit</button>
+								</div>
+							</div>
+						</form>
+					</div>
+
+					<div class="alert alert-success" id="message-deposit" role="alert"></div>
+				
+				</div>
+
+			</div>
+		</div>
+
+
+	</div>
+
+</body>
+</html>
